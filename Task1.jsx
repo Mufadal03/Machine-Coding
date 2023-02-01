@@ -1,49 +1,69 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const countries = [
-  {
-    name: "India",
-    cities: ["Mumbai", "Delhi"]
-  },
-  {
-    name: "Pakistan",
-    cities: ["Karachi", "Lahore"]
-  },
-  {
-    name: "Bangladesh",
-    cities: ["Dhaka", "Chittagong"]
-  }
+const arr = [
+  "play game",
+  "DO Coding",
+  "READ BOOKS",
+  "EAT SNACKS",
+  "READ BOOKS"
 ];
-export const Task2 = () => {
-  const [data] = useState(countries);
-  const [city, setCity] = useState([]);
-  const handleChange = (e) => {
-    console.log(e.target.value);
-    e.target.value !== "-1"
-      ? setCity([...data[e.target.value].cities])
-      : setCity([]);
+
+export const Task1 = () => {
+  const [selected, setSelect] = useState([]);
+  const [data, setData] = useState(arr);
+  const handleChange = (elem, index) => {
+    let myStore = [...selected];
+    if (selected.includes(elem)) {
+      myStore.splice(myStore.indexOf(elem), 1);
+    } else {
+      myStore.push(elem);
+    }
+    setSelect([...myStore]);
   };
+
+  // useEffect(() => {
+  //   console.log(selected);
+  // }, [selected]);
+
+  const handleDelete = (index) => {
+    let ans = data.filter((el, i) => i !== index);
+    setData(ans);
+  };
+  console.log(selected);
   return (
     <>
-      <h1>Task 2</h1>
-      <p>
-        make dynamic dropdowns if any country selected then 2nd dropdown should
-        popup with the cities
+      <h1>Task 1</h1>
+      <p style={{ width: "50%", margin: "auto" }}>
+        When a input box is checked delete btn should be shown after clicking el
+        should be deleted
       </p>
-      <select onChange={handleChange}>
-        <option value="-1">SELECT COUNTRY</option>
-        {data.map((el, index) => {
-          return <option value={index}>{el.name}</option>;
-        })}
-      </select>
-      {city?.length > 0 ? (
-        <select>
-          <option>SELECT CITY</option>
-          {city.map((el) => (
-            <option>{el}</option>
-          ))}
-        </select>
-      ) : null}
+      <b>
+        BUG : same name causes problem and once deleted default check is there
+      </b>
+      {data.map((el, index) => {
+        return (
+          <div
+            key={index}
+            style={{
+              border: "1px solid rgba(0,0,0,1)",
+              display: "flex",
+              gap: "1rem",
+              margin: "1rem",
+              justifyContent: "center"
+            }}
+          >
+            <input
+              onChange={() => handleChange(el, index)}
+              type="checkbox"
+              defaultChecked={false}
+            />
+            <p>{el}</p>
+            {selected?.includes(el) && (
+              <button onClick={() => handleDelete(index)}>DELETE</button>
+            )}
+          </div>
+        );
+      })}
     </>
   );
 };
